@@ -96,9 +96,9 @@ Essas váriaveis podem obtidas por meio do site SUPABASE e ZAPI
 
 ## 🔎 Observação
 
-Connection Method dentro do seu database deve está marcado 'Session pooler' para conexões IPv6
+Connection Method dentro do seu database no SUPABASE deve está marcado 'Session pooler' para conexões IPv4
 
-Para conexões IPv4 deve está marcado 'Direct connection' e o link para acessar o database dever ser
+Para conexões IPv6 deve está marcado 'Direct connection' e o link para acessar o database dever ser:
 
 ```bash
 SUPABASE_URL=postgresql://postgres:[SUA_SENHA]@db.yktdnqmhqkpvssfsuxkq.supabase.co:5432/postgres
