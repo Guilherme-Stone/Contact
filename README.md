@@ -42,7 +42,17 @@ Contact/
 │   └── userZAPIService.py
 ```
 
+## 🛢️ Tabela
+  ```bash
+TABELA USER
+      ----------------------
+       ID | NOME | TELEFONE
+      ----------------------
+```
+  
+
 ## 📂 Instalação
+
 ```bash
 pip install -r requirements.txt
 ```
