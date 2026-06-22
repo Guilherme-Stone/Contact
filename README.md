@@ -67,7 +67,7 @@ fastapi dev Main/main.py
 http://127.0.0.1:8000/docs
 ```
 
-## ❗Atenção
+## ❗ Atenção
 
 Crie um arquivo .env que deve ser colocado exatamente o seguinte nome de variáveis de ambientes
 ```bash
@@ -84,7 +84,7 @@ ZAPICTOKEN=FgkU54
 ```
 Essas váriaveis podem obtidas por meio do site SUPABASE e ZAPI
 
-## Observação
+## 🔎 Observação
 
 Connection Method dentro do seu database deve está marcado 'Session pooler' para conexões IPv6
 
