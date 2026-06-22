@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import AsyncSession
 import httpx
 from Services.Exceptions.userException import UserException
+from Model.Entity.user import User
 
 load_dotenv()
 
@@ -12,9 +13,10 @@ class UserZapiService:
         self.repo = UserRepository()
         self.token = os.getenv("ZAPITOKEN")
         self.id = os.getenv("ZAPIID")
+        self.ctoken = os.getenv("ZAPICTOKEN")
 
         # use ZAPI
-    async def sendMessageByNumberS(self,number_to_recive:str,session:AsyncSession)->str:
+    async def sendMessageByNumberS(self,number_to_recive:str,session:AsyncSession)->User:
 
         user = await self.repo.getUserByNumber(number_to_recive,session=session)
 
@@ -27,7 +29,8 @@ class UserZapiService:
             response = await client.post(
                 url=url,
                 headers={
-                    "Client-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Client-Token": f"{self.ctoken}"
                 },
                 json={
                       "phone": f"{number_to_recive}",
@@ -35,12 +38,16 @@ class UserZapiService:
                       }
             )
 
+        if response.status_code != 200:
+            print("DADOS ENVIADOS:", response.request.read())
+            print("RESPOSTA DA Z-API:", response.text)
+
+
         response.raise_for_status()
 
-        return response.json()
+        return user
 
-
-    async def sendMessageForAllS(self,session:AsyncSession)->str:
+    async def sendMessageForAllS(self,session:AsyncSession)->list[User]:
         listUsers =  await self.repo.getAllUsers(session=session)
 
         for user in listUsers:
@@ -48,11 +55,13 @@ class UserZapiService:
                 response = await client.post(
                     url=f"https://api.z-api.io/instances/{self.id}/token/{self.token}/send-text",
                     headers={
-                        "Client-Type":"application/json"
+                        "Client-Type":"application/json",
+                        "Client-Token": f"{self.ctoken}"
                     },
                     json={
                         "phone":f"{user.phone}",
                         "message": f"Olá, {user.name} tudo bem com você?"
                     }
                 )
-        return response.json()
+                print(listUsers)
+        return listUsers

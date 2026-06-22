@@ -1,53 +1,63 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from Controller.userZAPIController import UserZAPIController
 from Database.database import db
-from Schema.userDTO import UserDTOCreate, UserDTOResponse, UserDTOUpdate
-from Controller.userController import UserController
-
-
+from Schema.userDTO import UserDTOCreate, UserDTOResponse, UserDTOUpdate, UserDTOResponseList
+from Services.userZAPIService import UserZapiService
+from Services.userService import UserService
 
 router = APIRouter()
 
 @router.post("/createUser",response_model=UserDTOResponse)
 async def createUser(userDto:UserDTOCreate,session: AsyncSession = Depends(db.get_db)):
-    userC = UserController()
-    res = await userC.createUserC(userDto.name,userDto.number,session=session)
-    return {
-             "statusCode": 201,
-             "message":"User Created",
-             "body": res
-            }
+    try:
+        userS = UserService()
+        res = await userS.createUserS(userDto.name,userDto.number,session=session)
+        return {
+                 "statusCode": 201,
+                 "message":"User Created",
+                 "body": res
+                }
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
 
 @router.put("/updateUser",response_model=UserDTOResponse)
 async def updateNumber(userDto:UserDTOUpdate,session: AsyncSession = Depends(db.get_db)):
-    userC = UserController()
-    res = await userC.updateUserC(userDto.old_number,userDto.new_number,session=session)
-    return {
-        'statusCode': 200,
-        "message": "User Updated",
-        "body": res
-    }
+    try:
+        userS = UserService()
+        res = await userS.updateUserS(userDto.old_number,userDto.new_number,session=session)
+        return {
+            'statusCode': 200,
+            "message": "User Updated",
+            "body": res
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
+
 
 @router.get("/getUser",response_model=UserDTOResponse)
 async def sendMessageByNumber(number:str,session: AsyncSession = Depends(db.get_db)):
-    userC = UserZAPIController()
-    res = await userC.sendMessageByNumberC(number,session)
+    try:
+        userS = UserZapiService()
+        res = await userS.sendMessageByNumberS(number,session)
 
-    return {
-        'statusCode': 200,
-        "message": "User returned",
-        "body": res
-    }
+        return {
+            'statusCode': 200,
+            "message": "User returned",
+            "body": res
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))
 
 
-@router.get("/getUser", response_model=UserDTOResponse)
+@router.get("/getAllUser", response_model=UserDTOResponseList)
 async def sendMessageAll(session: AsyncSession = Depends(db.get_db)):
-    userC = UserZAPIController()
-    res = await userC.sendMessageForAllC(session)
-
-    return {
-        'statusCode': 200,
-        "message": "User returned",
-        "body": res
-    }
+    try:
+        userC = UserZapiService()
+        res = await userC.sendMessageForAllS(session)
+        return {
+            'statusCode': 200,
+            "message": "User returned",
+            "body": res
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400,detail=str(e))

@@ -6,7 +6,7 @@ from Routes.routes import router
 @asynccontextmanager
 async def lifespan(app:FastAPI):
     await db.init_db()
-    yield app
+    yield
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(router=router)

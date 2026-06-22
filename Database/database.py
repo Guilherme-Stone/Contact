@@ -23,9 +23,6 @@ class Database:
             database_url,
             echo=True,
             pool_pre_ping=True,
-            connect_args={
-                "ssl": True
-            }
         )
 
         self.session_maker = async_sessionmaker(

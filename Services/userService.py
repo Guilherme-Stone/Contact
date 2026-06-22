@@ -1,7 +1,6 @@
 from Model.Repository.userRepository import UserRepository
 from Model.Entity.user import User
 from sqlalchemy.ext.asyncio import AsyncSession
-from Services.Exceptions.userException import UserException
 
 class UserService:
 
@@ -16,6 +15,7 @@ class UserService:
 
         user = User(name=name,phone=number)
         await self.repo.addUser(user,session)
+        print("Retornado Service: -> ",user)
         return user
 
     async def updateUserS(self,old_number:str,new_number:str,session:AsyncSession)-> User:
